@@ -1,10 +1,11 @@
-package homework.menu;
+package menu;
 
-import homework.fill.FillMain;
-import homework.sort.InsertionSort;
-import homework.sort.QuickSort;
-import homework.sort.SortStrategy;
-import homework.student.Student;
+import fill.FillMain;
+import sort.EvenOnlySorter;
+import sort.InsertionSort;
+import sort.QuickSort;
+import sort.SortStrategy;
+import student.Student;
 
 import java.util.List;
 import java.util.Scanner;
@@ -34,8 +35,9 @@ public class Menu {
                 case 1 -> createStudents();
                 case 2 -> showStudents();
                 case 3 -> sortStudentsMenu();
-                case 4 -> clearStudents();
-//                case 5 ->
+                case 4 -> sortEvenOnly();
+                case 5 -> clearStudents();
+//                case 6 -> сохранение в файл
                 case 0 -> {
                     System.out.println("Выход.");
                     return;
@@ -52,8 +54,9 @@ public class Menu {
                 1 - создать список студентов
                 2 - показать список студентов
                 3 - отсортировать список
-                4 - очистить список
-                5 - выгрузить список
+                4 - сортировка по четности среднего бала
+                5 - очистить список
+                6 - выгрузить список
                 0 - выход
                 
                 Выберите пункт:\s""");
@@ -93,8 +96,23 @@ public class Menu {
         if (fieldChoice == 0) return;
 
         service.sort(fieldChoice);
-        System.out.println("Список отсортирован:");
-        service.getStudents().forEach(System.out::println);
+        System.out.println("Список отсортирован.");
+    }
+
+    public void sortEvenOnly() {
+        if (!ensureNotEmpty()) return;
+
+        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться");
+        int algoChoice = readChoice(0, 2);
+        if (algoChoice == 0) return;
+        SortStrategy strategy = switch (algoChoice) {
+            case 1 -> new InsertionSort();
+            case 2 -> new QuickSort();
+            default -> throw new IllegalStateException();
+        };
+
+        service.sortEvenOnly(strategy);
+        System.out.println("Список отсортирован.");
     }
 
     private void clearStudents() {

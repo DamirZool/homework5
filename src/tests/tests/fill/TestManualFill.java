@@ -1,7 +1,7 @@
 package tests.fill;
 
-import homework.student.Student;
-import homework.fill.ManualFill;
+import fill.ManualFill;
+import student.Student;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

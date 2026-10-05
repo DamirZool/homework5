@@ -1,4 +1,4 @@
-package homework.student;
+package student;
 
 public class Student {
     public static final double MAX_SCORE = 100;
