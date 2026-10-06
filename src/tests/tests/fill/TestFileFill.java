@@ -1,7 +1,7 @@
 package tests.fill;
 
-import homework.student.Student;
-import homework.fill.FileFill;
+import fill.FileFill;
+import student.Student;
 
 import java.io.*;
 import java.util.List;

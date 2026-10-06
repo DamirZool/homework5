@@ -1,6 +1,6 @@
-package homework.fill;
+package fill;
 
-import homework.student.Student;
+import student.Student;
 
 import java.util.List;
 import java.util.Scanner;

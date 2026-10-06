@@ -1,6 +1,6 @@
-package homework.sort.comparator;
+package sort.comparator;
 
-import homework.student.Student;
+import student.Student;
 
 import java.util.Comparator;
 

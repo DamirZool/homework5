@@ -1,6 +1,6 @@
-package homework.sort;
+package sort;
 
-import homework.student.Student;
+import student.Student;
 
 import java.util.Comparator;
 import java.util.List;
@@ -8,6 +8,7 @@ import java.util.List;
 public class InsertionSort implements SortStrategy{
     @Override
     public void sort(List<Student> students, Comparator<Student> comparator) {
+        long t1 = System.nanoTime();
         for (int i = 1; i < students.size(); i++) {
             Student current = students.get(i);
             int j = i - 1;
@@ -17,5 +18,6 @@ public class InsertionSort implements SortStrategy{
             }
             students.set(j+1, current);
         }
+        System.out.printf("Потрачено на сортировку: %d%n", (System.nanoTime() - t1));
     }
 }

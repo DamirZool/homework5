@@ -1,7 +1,7 @@
 package tests.fill;
 
-import homework.student.Student;
-import homework.fill.RandomFill;
+import fill.RandomFill;
+import student.Student;
 
 import java.util.List;
 

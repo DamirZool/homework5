@@ -1,6 +1,6 @@
-package homework.fill;
+package fill;
 
-import homework.student.Student;
+import student.Student;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -1,10 +1,11 @@
-package homework.menu;
+package menu;
 
-import homework.sort.comparator.AvgScoreComparator;
-import homework.sort.comparator.GroupNumComparator;
-import homework.sort.comparator.StudentIdComparator;
-import homework.sort.SortStrategy;
-import homework.student.Student;
+import sort.EvenOnlySorter;
+import sort.comparator.AvgScoreComparator;
+import sort.comparator.GroupNumComparator;
+import sort.comparator.StudentIdComparator;
+import sort.SortStrategy;
+import student.Student;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class StudentService {
 
         private static final Map<Integer, SortField> BY_CODE =
                 Arrays.stream(values())
-                        .collect(Collectors.toMap(f -> f.code, f -> f));
+                            .collect(Collectors.toMap(f -> f.code, f -> f));
 
         private final int code;
 
@@ -58,6 +59,10 @@ public class StudentService {
 
     public void setSorter(SortStrategy sorter) {
         this.sorter = Objects.requireNonNull(sorter, "sorter");
+    }
+
+    public void sortEvenOnly(SortStrategy strategy) {
+        EvenOnlySorter.sortEvenOnly(students, strategy);
     }
 
     public void setStudents(List<Student> students) {
