@@ -25,7 +25,7 @@ public class StudentService {
 
         private static final Map<Integer, SortField> BY_CODE =
                 Arrays.stream(values())
-                        .collect(Collectors.toMap(f -> f.code, f -> f));
+                            .collect(Collectors.toMap(f -> f.code, f -> f));
 
         private final int code;
 

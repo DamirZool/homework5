@@ -8,13 +8,12 @@ public class Student {
     private final double avgScore;
     private final String studentId;
 
-    private Student(Builder builder) {
-        this.groupNum = builder.groupNum;
-        this.avgScore = builder.avgScore;
-        this.studentId = builder.studentId;
+    private Student(String groupNum, double avgScore, String studentId) {
+        this.groupNum = groupNum;
+        this.avgScore = avgScore;
+        this.studentId = studentId;
     }
 
-    // т.к. используем билдер, класс по идее становится иммутабельным. Без сеттеров
     public double getAvgScore() {
         return avgScore;
     }
@@ -54,9 +53,8 @@ public class Student {
         }
 
         public Student build() {
-            return new Student(this);
+            return new Student(groupNum, avgScore, studentId);
         }
-
     }
 
     @Override
@@ -64,7 +62,6 @@ public class Student {
         return String.format("Студент с зачётной книжкой номер %s из группы %s, имеет средний бал %.2f", studentId, groupNum, avgScore);
     }
 
-    // equals и hashCode пригодятся для 4 доп. задания?
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

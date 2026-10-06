@@ -1,7 +1,5 @@
 package menu;
 
-import fill.FillMain;
-import sort.EvenOnlySorter;
 import sort.InsertionSort;
 import sort.QuickSort;
 import sort.SortStrategy;
@@ -73,15 +71,13 @@ public class Menu {
     }
 
     private void showStudents() {
-        if (ensureNotEmpty()) {
-            service.getStudents().forEach(System.out::println);
-        }
+        if (!ensureNotEmpty()) return;
+        service.getStudents().forEach(System.out::println);
     }
 
     private void sortStudentsMenu() {
         if (!ensureNotEmpty()) return;
-
-        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться");
+        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться в меню");
         int algoChoice = readChoice(0, 2);
         if (algoChoice == 0) return;
         SortStrategy strategy = switch (algoChoice) {
@@ -91,7 +87,7 @@ public class Menu {
         };
         service.setSorter(strategy);
 
-        System.out.println("Сортировать по: 1 — средний балл, 2 — группа, 3 — зачётка, 0 — вернуться");
+        System.out.println("Сортировать по: 1 — средний балл, 2 — группа, 3 — зачётка, 0 — вернуться в меню");
         int fieldChoice = readChoice(0, 3);
         if (fieldChoice == 0) return;
 
@@ -101,8 +97,7 @@ public class Menu {
 
     public void sortEvenOnly() {
         if (!ensureNotEmpty()) return;
-
-        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться");
+        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться в меню");
         int algoChoice = readChoice(0, 2);
         if (algoChoice == 0) return;
         SortStrategy strategy = switch (algoChoice) {

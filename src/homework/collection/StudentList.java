@@ -44,9 +44,7 @@ public class StudentList extends AbstractList<Student> {
 
     @Override
     public void add(int index, Student element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + size);
-        }
+        checkIndex(index);
         if (size == elements.length) {
             grow();
         }

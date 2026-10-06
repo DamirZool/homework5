@@ -1,5 +1,6 @@
-package fill;
+package menu;
 
+import fill.*;
 import student.Student;
 
 import java.util.Arrays;
@@ -51,12 +52,12 @@ public class FillMain {
     }
 
     public static List<Student> fillMain(Scanner scanner) {
-        System.out.print("Введите длину массива (0 — вернуться в меню): ");
+        System.out.print("Введите длину массива (0 — вернуться в меню в меню): ");
         int length = scanner.nextInt();
         if (length == 0) {
             return null;
         }
-        System.out.print("Выберите способ заполнения: 1 — вручную, 2 — из файла, 3 — рандомно, 4 - рандомно потоком, 0 — вернуться в меню: ");
+        System.out.print("Выберите способ заполнения: 1 — вручную, 2 — из файла, 3 — рандомно, 4 - рандомно потоком, 0 — вернуться в меню в меню: ");
         int strategyCode = readIntInRange(scanner,"Неверное значение. Введите число от 0 до 4");
         FillType fillType = FillType.fromCode(strategyCode);
         if (fillType == FillType.BACK) {
