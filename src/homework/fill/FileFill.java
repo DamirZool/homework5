@@ -16,9 +16,6 @@ public class FileFill implements FillStrategy {
 
     @Override
     public List<Student> fill(int length, Scanner scanner) {
-        if (length <= 0) {
-            return List.of();
-        }
         printHint(length);
         while (true) {
             String path = readPath(scanner);
@@ -77,8 +74,7 @@ public class FileFill implements FillStrategy {
         try {
             String[] fields = line.strip().split(",");
             if (fields.length != 3) {
-                throw new IllegalArgumentException("Одна строка должна содержать информацию о группе студента, "
-                        + "его средней оценке и номер зачётной книжки");
+                throw new IllegalArgumentException("В строке должна содержаться вся информация о студенте");
             }
             String groupNum = fields[0].strip();
             double avgScore = Double.parseDouble(fields[1].strip());
@@ -92,7 +88,7 @@ public class FileFill implements FillStrategy {
             );
         } catch (IllegalArgumentException e) {
             System.out.printf(
-                    "Строка: \"%s\" не валидна (%s), будет пропущена%n",
+                    "Строка: \"%s\" не валидна (%s), %n",
                     line, e.getMessage()
             );
             return Optional.empty();
@@ -116,7 +112,7 @@ public class FileFill implements FillStrategy {
     private void printHint(int length) {
         System.out.printf("""
                 Данные в файле должны храниться в формате: Группа, Средний балл, Номер зачётки
-                Пример: "ИКБО-01-23, 4.5, 12345"
+                Пример: "А-01-23, 4.5, 12345"
                 В массив будут внесены первые %d валидных строк.
                 Файл при этом будет прочитан целиком — для полной статистики.%n%n
                 """, length);

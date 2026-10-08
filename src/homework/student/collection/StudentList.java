@@ -1,4 +1,4 @@
-package collection;
+package student.collection;
 
 import student.Student;
 
@@ -80,8 +80,8 @@ public class StudentList extends AbstractList<Student> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + size);
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException(String.format("Индекс: %d, размер: %d", index, size()));
         }
     }
 }

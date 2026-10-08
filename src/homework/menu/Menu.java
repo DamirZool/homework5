@@ -1,21 +1,27 @@
 package menu;
 
+import student.StudentService;
 import sort.InsertionSort;
 import sort.QuickSort;
 import sort.SortStrategy;
+
 import student.Student;
+
+import writing.AddFile;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
-public class Menu {
+import static menu.FillMain.fillMain;
+
+public class Menu extends MenuIO{
 
     private final StudentService service;
-    private final Scanner scanner;
 
     public Menu(StudentService service, Scanner scanner) {
+        super(scanner);
         this.service = service;
-        this.scanner = scanner;
     }
 
     public static void main(String[] args) {
@@ -27,7 +33,7 @@ public class Menu {
     public void run() {
         while (true) {
             printMainMenu();
-            int choice = readChoice(0, 5);
+            int choice = readChoice(0, 7);
 
             switch (choice) {
                 case 1 -> createStudents();
@@ -35,39 +41,25 @@ public class Menu {
                 case 3 -> sortStudentsMenu();
                 case 4 -> sortEvenOnly();
                 case 5 -> clearStudents();
-//                case 6 -> сохранение в файл
+                case 6 -> saveFile();
+                case 7 -> countOccurrencesMenu();
                 case 0 -> {
-                    System.out.println("Выход.");
+                    System.out.print("Выход.");
                     return;
                 }
             }
-
             pause();
         }
     }
 
-    private void printMainMenu() {
-        System.out.println("""
-                Меню:
-                1 - создать список студентов
-                2 - показать список студентов
-                3 - отсортировать список
-                4 - сортировка по четности среднего бала
-                5 - очистить список
-                6 - выгрузить список
-                0 - выход
-                
-                Выберите пункт:\s""");
-    }
-
     private void createStudents() {
-        List<Student> created = FillMain.fillMain(scanner);
+        List<Student> created = fillMain(scanner);
         if (created == null) {
             System.out.println("Создание отменено.");
             return;
         }
         service.setStudents(created);
-        System.out.println("Список создан. Элементов: " + service.size());
+        if (!service.isEmpty()) System.out.println("Список создан. Элементов: " + service.size());
     }
 
     private void showStudents() {
@@ -77,36 +69,38 @@ public class Menu {
 
     private void sortStudentsMenu() {
         if (!ensureNotEmpty()) return;
-        System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться в меню");
-        int algoChoice = readChoice(0, 2);
-        if (algoChoice == 0) return;
-        SortStrategy strategy = switch (algoChoice) {
-            case 1 -> new InsertionSort();
-            case 2 -> new QuickSort();
-            default -> throw new IllegalStateException();
-        };
-        service.setSorter(strategy);
 
-        System.out.println("Сортировать по: 1 — средний балл, 2 — группа, 3 — зачётка, 0 — вернуться в меню");
+        System.out.println("Сортировать по: 1 — средний балл, 2 — группа, 3 — зачётка, 0 — вернуться");
         int fieldChoice = readChoice(0, 3);
         if (fieldChoice == 0) return;
 
-        service.sort(fieldChoice);
-        System.out.println("Список отсортирован.");
+        chooseAndApply(strategy -> {
+            service.setSorter(strategy);
+            service.sort(fieldChoice);
+        });
     }
 
-    public void sortEvenOnly() {
+    private void sortEvenOnly() {
+        chooseAndApply(strategy -> {
+            service.setSorter(strategy);
+            service.sortEvenOnly();
+        });
+    }
+
+    private void chooseAndApply(Consumer<SortStrategy> action) {
         if (!ensureNotEmpty()) return;
+
         System.out.println("Выберите алгоритм: 1 — вставками, 2 — быстрая, 0 — вернуться в меню");
-        int algoChoice = readChoice(0, 2);
-        if (algoChoice == 0) return;
-        SortStrategy strategy = switch (algoChoice) {
+        int choice = readChoice(0, 2);
+        if (choice == 0) return;
+
+        SortStrategy strategy = switch (choice) {
             case 1 -> new InsertionSort();
             case 2 -> new QuickSort();
             default -> throw new IllegalStateException();
         };
 
-        service.sortEvenOnly(strategy);
+        action.accept(strategy);
         System.out.println("Список отсортирован.");
     }
 
@@ -115,35 +109,45 @@ public class Menu {
         System.out.println("Список очищен.");
     }
 
+    private void countOccurrencesMenu() {
+        if (!ensureNotEmpty()) return;
+
+        System.out.println("По какому полю считать: 1 — средний балл, 2 — группа, 3 — зачётка, 0 — отмена");
+        int fieldChoice = readChoice(0, 3);
+        if (fieldChoice == 0) return;
+
+        System.out.print("Введите значение для поиска: ");
+        String raw = scanner.nextLine().trim();
+
+        Object target;
+        if (fieldChoice == 1) {
+            try {
+                target = Double.parseDouble(raw);
+            } catch (NumberFormatException e) {
+                System.out.println("Для среднего балла нужно число.");
+                return;
+            }
+        } else {
+            target = raw;
+        }
+
+        System.out.print("Сколько потоков использовать: ");
+        int threads = readChoice(1, 32);
+
+        long count = service.countOccurrences(target, fieldChoice, threads);
+        System.out.println("Найдено вхождений: " + count);
+    }
+
+    private void saveFile() {
+        if (!ensureNotEmpty()) return;
+        AddFile.addFile(service.getStudents(), scanner);
+    }
+
     private boolean ensureNotEmpty() {
         if (service.isEmpty()) {
             System.out.println("Список пуст.");
             return false;
         }
         return true;
-    }
-
-    private void pause() {
-        System.out.println("\nНажмите Enter для продолжения...");
-        scanner.nextLine();
-        System.out.println();
-    }
-
-    private int readChoice(int min, int max) {
-        while (true) {
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-                if (choice >= min && choice <= max) {
-                    return choice;
-                }
-                System.out.println("Введите число от " + min + " до " + max);
-            } else if (scanner.hasNext()) {
-                scanner.next();
-                System.out.println("Введите число от " + min + " до " + max);
-            } else {
-                throw new IllegalStateException("Входной поток завершён");
-            }
-        }
     }
 }
