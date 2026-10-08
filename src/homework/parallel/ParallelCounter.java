@@ -1,4 +1,4 @@
-package menu;
+package parallel;
 
 import sort.enums.SortField;
 import student.Student;

@@ -19,6 +19,7 @@ public class AddFile {
 
     public static void addFile(List<Student> students, Scanner scanner) {
         while (true) {
+            System.out.print("В случае совпадении имени файла с существующим, данные будут добавлены в существующий файл");
             System.out.print("Введите имя файла (0 — отмена): ");
             String input = scanner.nextLine().trim();
 

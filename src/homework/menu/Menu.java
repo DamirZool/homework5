@@ -1,5 +1,6 @@
 package menu;
 
+import student.StudentService;
 import sort.InsertionSort;
 import sort.QuickSort;
 import sort.SortStrategy;
@@ -51,7 +52,6 @@ public class Menu extends MenuIO{
         }
     }
 
-    // Создание списка студента
     private void createStudents() {
         List<Student> created = fillMain(scanner);
         if (created == null) {
@@ -59,16 +59,14 @@ public class Menu extends MenuIO{
             return;
         }
         service.setStudents(created);
-        System.out.println("Список создан. Элементов: " + service.size());
+        if (!service.isEmpty()) System.out.println("Список создан. Элементов: " + service.size());
     }
 
-    // Вывод списка студентов
     private void showStudents() {
         if (!ensureNotEmpty()) return;
         service.getStudents().forEach(System.out::println);
     }
 
-    // Меню сортировки студентов
     private void sortStudentsMenu() {
         if (!ensureNotEmpty()) return;
 
@@ -83,7 +81,10 @@ public class Menu extends MenuIO{
     }
 
     private void sortEvenOnly() {
-        chooseAndApply(strategy -> service.sortEvenOnly(strategy));
+        chooseAndApply(strategy -> {
+            service.setSorter(strategy);
+            service.sortEvenOnly();
+        });
     }
 
     private void chooseAndApply(Consumer<SortStrategy> action) {

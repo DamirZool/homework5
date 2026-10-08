@@ -20,7 +20,7 @@ public class MenuIO {
                 6 - выгрузить список
                 7 - посчитать совпадения
                 0 - выход
-               \s
+               
                 Выберите пункт:\s""");
     }
 
@@ -32,10 +32,10 @@ public class MenuIO {
                 if (choice >= min && choice <= max) {
                     return choice;
                 }
-                System.out.println("Введите число от " + min + " до " + max);
+                System.out.printf("Введите число от %d до %d: ", min, max);
             } else if (scanner.hasNext()) {
                 scanner.next();
-                System.out.println("Введите число от " + min + " до " + max);
+                System.out.printf("Введите число от %d до %d: ", min, max);
             } else {
                 throw new IllegalStateException("Входной поток завершён");
             }

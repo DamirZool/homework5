@@ -3,115 +3,143 @@ package tests.fill;
 import fill.ManualFill;
 import student.Student;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 
 public class TestManualFill {
+
     private static int passed = 0;
     private static int failed = 0;
 
     public static void main(String[] args) {
-        InputStream originalIn = System.in;
-
-        testCorrectInput();
-        testEmptyGroup();
-        testNonNumericScore();
-        testScoreOutOfRange();
-        testEmptyStudentId();
+        testTwoValidStudents();
+        testSingleValidStudent();
+        testEmptyGroupRetry();
+        testEmptyStudentIdRetry();
+        testNonNumericScoreRetry();
+        testScoreTooHighRetry();
+        testScoreTooLowRetry();
         testZeroLength();
 
-        System.setIn(originalIn);
+        System.out.println();
         System.out.println("Пройдено: " + passed);
-        System.out.println("Упало: " + failed);
+        System.out.println("Упало:    " + failed);
     }
 
-    private static void testCorrectInput() {
-        setInput("ИКБО-01-23\n12345\n4.5\nИКБО-02-23\n67890\n3.8\n");
+    private static void testTwoValidStudents() {
+        List<Student> result = run(
+                "А-01-23\n12345\n4,5\nА-02-23\n67890\n3,8\n",
+                2);
 
-        List<Student> result = new ManualFill().fill(2, new Scanner(System.in));
-
-        if (result.size() == 2
-                && result.get(0).getGroupNum().equals("ИКБО-01-23")
-                && result.get(0).getStudentId().equals("12345")
-                && result.get(0).getAvgScore() == 4.5
-                && result.get(1).getGroupNum().equals("ИКБО-02-23")
-                && result.get(1).getStudentId().equals("67890")
-                && result.get(1).getAvgScore() == 3.8) {
-            passed++;
-        } else {
-            failed++;
-            System.out.println("FAIL testCorrectInput: получено " + result);
-        }
+        check("testTwoValidStudents",
+                result.size() == 2
+                        && eq(result.get(0).getGroupNum(), "А-01-23")
+                        && eq(result.get(0).getStudentId(), "12345")
+                        && result.get(0).getAvgScore() == 4.5
+                        && eq(result.get(1).getGroupNum(), "А-02-23")
+                        && eq(result.get(1).getStudentId(), "67890")
+                        && result.get(1).getAvgScore() == 3.8,
+                result);
     }
 
-    private static void testEmptyGroup() {
-        setInput("\n\nИКБО-01-23\n12345\n4.5\n");
+    private static void testSingleValidStudent() {
+        List<Student> result = run(
+                "А-03-23\n55555\n5,0\n",
+                1);
 
-        List<Student> result = new ManualFill().fill(1, new Scanner(System.in));
-
-        if (result.size() == 1 && result.get(0).getGroupNum().equals("ИКБО-01-23")) {
-            passed++;
-        } else {
-            failed++;
-            System.out.println("FAIL testEmptyGroup: получено " + result);
-        }
+        check("testSingleValidStudent",
+                result.size() == 1
+                        && eq(result.get(0).getGroupNum(), "А-03-23")
+                        && eq(result.get(0).getStudentId(), "55555")
+                        && result.get(0).getAvgScore() == 5.0,
+                result);
     }
 
-    private static void testNonNumericScore() {
-        setInput("ИКБО-01-23\n12345\nabc\n4.5\n");
+    private static void testEmptyGroupRetry() {
+        List<Student> result = run(
+                "\n\nА-04-23\n44444\n4,0\n",
+                1);
 
-        List<Student> result = new ManualFill().fill(1, new Scanner(System.in));
-
-        if (result.size() == 1 && result.get(0).getAvgScore() == 4.5) {
-            passed++;
-        } else {
-            failed++;
-            System.out.println("FAIL testNonNumericScore: получено " + result);
-        }
+        check("testEmptyGroupRetry",
+                result.size() == 1
+                        && eq(result.get(0).getGroupNum(), "А-04-23")
+                        && eq(result.get(0).getStudentId(), "44444")
+                        && result.get(0).getAvgScore() == 4.0,
+                result);
     }
 
-    private static void testScoreOutOfRange() {
-        setInput("ИКБО-01-23\n12345\n150\n4.5\n");
+    private static void testEmptyStudentIdRetry() {
+        List<Student> result = run(
+                "А-05-23\n\n33333\n3,5\n",
+                1);
 
-        List<Student> result = new ManualFill().fill(1, new Scanner(System.in));
-
-        if (result.size() == 1 && result.get(0).getAvgScore() == 4.5) {
-            passed++;
-        } else {
-            failed++;
-            System.out.println("FAIL testScoreOutOfRange: получено " + result);
-        }
+        check("testEmptyStudentIdRetry",
+                result.size() == 1
+                        && eq(result.get(0).getGroupNum(), "А-05-23")
+                        && eq(result.get(0).getStudentId(), "33333")
+                        && result.get(0).getAvgScore() == 3.5,
+                result);
     }
 
-    private static void testEmptyStudentId() {
-        setInput("ИКБО-01-23\n\n12345\n4.5\n");
+    private static void testNonNumericScoreRetry() {
+        List<Student> result = run(
+                "А-06-23\n22222\nabc\n4,2\n",
+                1);
 
-        List<Student> result = new ManualFill().fill(1, new Scanner(System.in));
+        check("testNonNumericScoreRetry",
+                result.size() == 1
+                        && eq(result.get(0).getStudentId(), "22222")
+                        && result.get(0).getAvgScore() == 4.2,
+                result);
+    }
 
-        if (result.size() == 1 && result.get(0).getStudentId().equals("12345")) {
-            passed++;
-        } else {
-            failed++;
-            System.out.println("FAIL testEmptyStudentId: получено " + result);
-        }
+    private static void testScoreTooHighRetry() {
+        List<Student> result = run(
+                "А-07-23\n11111\n150\n4,8\n",
+                1);
+
+        check("testScoreTooHighRetry",
+                result.size() == 1
+                        && eq(result.get(0).getStudentId(), "11111")
+                        && result.get(0).getAvgScore() == 4.8,
+                result);
+    }
+
+    private static void testScoreTooLowRetry() {
+        List<Student> result = run(
+                "А-08-23\n99999\n-5\n3,3\n",
+                1);
+
+        check("testScoreTooLowRetry",
+                result.size() == 1
+                        && eq(result.get(0).getStudentId(), "99999")
+                        && result.get(0).getAvgScore() == 3.3,
+                result);
     }
 
     private static void testZeroLength() {
-        setInput("");
+        List<Student> result = run("", 0);
 
-        List<Student> result = new ManualFill().fill(0, new Scanner(System.in));
+        check("testZeroLength",
+                result.isEmpty(),
+                result);
+    }
 
-        if (result.isEmpty()) {
+    private static List<Student> run(String input, int length) {
+        Scanner scanner = new Scanner(input);
+        return new ManualFill().fill(length, scanner);
+    }
+
+    private static boolean eq(String a, String b) {
+        return a != null && a.equals(b);
+    }
+
+    private static void check(String name, boolean condition, Object actual) {
+        if (condition) {
             passed++;
         } else {
             failed++;
-            System.out.println("FAIL testZeroLength: ожидался пустой список, получено " + result.size());
+            System.out.println("FAIL " + name + ": получено " + actual);
         }
-    }
-
-    private static void setInput(String input) {
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
     }
 }

@@ -15,7 +15,7 @@ class FillMain {
     public static List<Student> fillMain(Scanner scanner) {
         System.out.print("Введите длину массива (0 — отмена): ");
         int length = checkInt(scanner, false);
-        if (length == 0) return null;
+        if (length == 0 ) return null;
 
         System.out.print("Выберите способ заполнения: 1 — вручную, 2 — из файла, 3 — рандомно, 4 - рандомно потоком, 0 — вернуться в меню: ");
         int code = checkInt(scanner, true);
@@ -24,6 +24,7 @@ class FillMain {
 
         FillStrategy strategy = type.createStrategy();
 
+        // выбирается стратегия
         return strategy.fill(length, scanner);
     }
     
@@ -32,13 +33,13 @@ class FillMain {
             if (scanner.hasNextInt()) {
                 int value = scanner.nextInt();
                 scanner.nextLine();
-                if (!checkRange || (value >= MIN && value <= MAX)) {
+                if (value >= 0 && (!checkRange || value <= MAX)) {
                     return value;
                 }
-                System.out.printf("Неверное значение. Введите число от %d до %d%n", MIN, MAX);
+                System.out.printf("Неверное значение. Введите число от %d до %d%n: ", MIN, MAX);
             } else if (scanner.hasNext()) {
                 scanner.next();
-                System.out.println("Неверное значение. Введите число");
+                System.out.println("Неверное значение. Введите число: ");
             } else {
                 throw new IllegalStateException("Входной поток завершён");
             }

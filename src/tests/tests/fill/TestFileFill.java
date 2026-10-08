@@ -28,9 +28,9 @@ public class TestFileFill {
 
     private static void testExactLength() {
         File file = createTempFile(
-                "ИКБО-01-23, 4.5, 12345",
-                "ИКБО-02-23, 3.8, 67890",
-                "ИКБО-03-23, 5.0, 11111"
+                "А-01-23, 4.5, 12345",
+                "А-02-23, 3.8, 67890",
+                "А-03-23, 5.0, 11111"
         );
         setInput(file.getAbsolutePath() + "\n");
 
@@ -41,11 +41,11 @@ public class TestFileFill {
 
     private static void testMoreLinesThanLength() {
         File file = createTempFile(
-                "ИКБО-01-23, 4.5, 12345",
-                "ИКБО-02-23, 3.8, 67890",
-                "ИКБО-03-23, 5.0, 11111",
-                "ИКБО-04-23, 4.0, 22222",
-                "ИКБО-05-23, 3.5, 33333"
+                "А-01-23, 4.5, 12345",
+                "А-02-23, 3.8, 67890",
+                "А-03-23, 5.0, 11111",
+                "А-04-23, 4.0, 22222",
+                "А-05-23, 3.5, 33333"
         );
         setInput(file.getAbsolutePath() + "\n");
 
@@ -56,12 +56,12 @@ public class TestFileFill {
 
     private static void testLessLinesThanLength() {
         File fileShort = createTempFile(
-                "ИКБО-01-23, 4.5, 12345"
+                "А-01-23, 4.5, 12345"
         );
         File fileEnough = createTempFile(
-                "ИКБО-01-23, 4.5, 12345",
-                "ИКБО-02-23, 3.8, 67890",
-                "ИКБО-03-23, 5.0, 11111"
+                "А-01-23, 4.5, 12345",
+                "А-02-23, 3.8, 67890",
+                "А-03-23, 5.0, 11111"
         );
         setInput(fileShort.getAbsolutePath() + "\n" + fileEnough.getAbsolutePath() + "\n");
 
@@ -72,11 +72,11 @@ public class TestFileFill {
 
     private static void testInvalidLinesSkipped() {
         File file = createTempFile(
-                "ИКБО-01-23, 4.5, 12345",
+                "А-01-23, 4.5, 12345",
                 "битая строка",
-                "ИКБО-02-23, 3.8, 67890",
-                "ИКБО-03-23, abc, 11111",
-                "ИКБО-04-23, 4.0, 22222"
+                "А-02-23, 3.8, 67890",
+                "А-03-23, abc, 11111",
+                "А-04-23, 4.0, 22222"
         );
         setInput(file.getAbsolutePath() + "\n");
 
@@ -87,8 +87,8 @@ public class TestFileFill {
 
     private static void testNonExistentPath() {
         File fileOk = createTempFile(
-                "ИКБО-01-23, 4.5, 12345",
-                "ИКБО-02-23, 3.8, 67890"
+                "А-01-23, 4.5, 12345",
+                "А-02-23, 3.8, 67890"
         );
         String badPath = "нет_такого_файла_" + System.nanoTime() + ".txt";
         setInput(badPath + "\n" + fileOk.getAbsolutePath() + "\n");
@@ -100,9 +100,9 @@ public class TestFileFill {
 
     private static void testMissingField() {
         File file = createTempFile(
-                "ИКБО-01-23, 4.5",
-                "ИКБО-02-23, 3.8, 67890",
-                "ИКБО-03-23, 5.0, 11111"
+                "А-01-23, 4.5",
+                "А-02-23, 3.8, 67890",
+                "А-03-23, 5.0, 11111"
         );
         setInput(file.getAbsolutePath() + "\n");
 
