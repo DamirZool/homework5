@@ -8,7 +8,7 @@ public class Student {
     private final double avgScore;
     private final String studentId;
 
-    public Student(String groupNum, double avgScore, String studentId) {
+    private Student(String groupNum, double avgScore, String studentId) {
         this.groupNum = groupNum;
         this.avgScore = avgScore;
         this.studentId = studentId;

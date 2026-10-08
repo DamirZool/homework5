@@ -4,7 +4,7 @@
 
 ## Запуск
 
-Открыть проект в IntelliJ IDEA, запустить `src/com/example/Main.java`.
+Открыть проект в IntelliJ IDEA, запустить `src/homework/menu/Menu.java`.
 
 ## Автор
 
